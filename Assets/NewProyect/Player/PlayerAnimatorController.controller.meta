@@ -1,0 +1,12 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Models/Player/PlayerAnimatorController.controller.meta
+guid: dc4d5afceba1f954486be2bfd63d2732
+========
+guid: 9afcbd57f7004b041bef11d7a04b81f2
+>>>>>>>> LogicaEscenario:Assets/NewProyect/Enemys/Enemy01/cEnemy01.controller.meta
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
