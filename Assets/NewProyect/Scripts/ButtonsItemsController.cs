@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class ButtonsItemsController : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class ButtonsItemsController : MonoBehaviour
     private void Start()
     {
         canvas = FindObjectOfType<CanvasController>();
-        buttons = canvas.transform.GetComponents<Image>().Where(i => i.gameObject.activeInHierarchy).ToList();
+        buttons = canvas.transform.GetComponentsInChildren<Image>().Where(i => i.gameObject.activeInHierarchy).ToList();
         //images = canvas.GetComponentsInChildren<Image>().Where(i=>i.name.EndsWith("Menu")).ToList();
         images = canvas.imagesMenu;
         images.ForEach(img => {
@@ -25,15 +24,18 @@ public class ButtonsItemsController : MonoBehaviour
 
     public void ShowMenu()
     {
-        canvas.HideMenus();
-        HideMenus();
+        // Oculta todos los menús antes de mostrar el nuevo
+        HideAllMenus();
         menu.SetActive(!menu.activeInHierarchy);
     }
 
-    private void HideMenus()
+
+    private void HideAllMenus()
     {
-        buttons.ForEach(img => {
-            img.gameObject.SetActive(false);
-        });
+        var allMenus = FindObjectsOfType<ButtonsItemsController>();
+        foreach (var menuController in allMenus)
+        {
+            menuController.menu.SetActive(false);
+        }
     }
 }
