@@ -17,6 +17,9 @@ public class PlayerMovement : MonoBehaviour
     public bool haveLever = false;
     private Animator anim;
 
+    public List<string> itemsCollected = null;
+    public List<string> itemsToCollect = null;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -29,8 +32,6 @@ public class PlayerMovement : MonoBehaviour
     {
         // Detectar si la tecla Shift está presionada
         agent.speed = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) ? sprintSpeed : normalSpeed;
-
-
 
         // Movimiento con teclado
         Vector3 move = Vector3.zero;
@@ -73,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit))
                 {
-                    agent.SetDestination(hit.point); 
+                    agent.SetDestination(hit.point);
                     if (haveLever)
                     {
                         attackLever = true;
@@ -89,15 +90,11 @@ public class PlayerMovement : MonoBehaviour
             isWalking = agent.velocity.magnitude > 0.1f;
         }
 
-        // Simulación de ataque
-        if (Input.GetMouseButtonDown(1)) // Clic derecho para atacar
-        {
-           
-        }
-
         // Actualizar animaciones
         ChooseAnimation();
     }
+
+
 
     void ChooseAnimation()
     {
@@ -123,5 +120,10 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("picking", false);
         anim.ResetTrigger("AttackNoLever");
         anim.ResetTrigger("AttackLever");
+    }
+
+    public void CollectItem(string itemName)
+    {
+        itemsCollected.Add(itemName);
     }
 }
