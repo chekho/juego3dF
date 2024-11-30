@@ -73,29 +73,26 @@ public class PlayerMovement : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit))
                 {
-                    agent.SetDestination(hit.point);
-                    isWalking = true;
+                    agent.SetDestination(hit.point); 
+                    if (haveLever)
+                    {
+                        attackLever = true;
+                        attackLevernt = false;
+                    }
+                    else
+                    {
+                        attackLever = false;
+                        attackLevernt = true;
+                    }
                 }
             }
             isWalking = agent.velocity.magnitude > 0.1f;
         }
 
-        // Detectar si el agente está caminando
-        //
-
         // Simulación de ataque
         if (Input.GetMouseButtonDown(1)) // Clic derecho para atacar
         {
-            if (haveLever)
-            {
-                attackLever = true;
-                attackLevernt = false;
-            }
-            else
-            {
-                attackLever = false;
-                attackLevernt = true;
-            }
+           
         }
 
         // Actualizar animaciones
