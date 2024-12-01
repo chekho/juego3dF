@@ -9,6 +9,7 @@ TagManager:
   - Item
   - Enemy
   - Furniture
+  - FloorTablero
   layers:
   - Default
   - TransparentFX
