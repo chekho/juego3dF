@@ -6,6 +6,8 @@ public class GuardEnemy : MonoBehaviour
     public Transform player;
     public float detectionRadius = 10f;
     public float chaseRadius = 15f;
+    public CanvasController canvasController;
+    public float oxygenReductionTime = 60f; // Variable pública para configurar el tiempo de reducción de oxígeno desde el editor
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -14,59 +16,55 @@ public class GuardEnemy : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>(); // Obtener el componente Animator
+        animator = GetComponent<Animator>(); 
     }
 
     void Update()
-{
-    // Verificar si el agente está habilitado y colocado en el NavMesh
-    if (!agent.isOnNavMesh)
     {
-        return; // Salir para evitar llamar a SetDestination
-    }
+        if (!agent.isOnNavMesh)
+        {
+            return;
+        }
 
-    float distanceToPlayer = Vector3.Distance(player.position, transform.position);
+        float distanceToPlayer = Vector3.Distance(player.position, transform.position);
 
-    if (distanceToPlayer < detectionRadius)
-    {
-        isChasing = true;
-    }
+        if (distanceToPlayer < detectionRadius)
+        {
+            isChasing = true;
+        }
 
-    if (isChasing && distanceToPlayer < chaseRadius)
-    {
-        agent.SetDestination(player.position);
-    }
-    else
-    {
-        isChasing = false;
-        agent.SetDestination(transform.position); // O puede patrullar en su área.
-    }
+        if (isChasing && distanceToPlayer < chaseRadius)
+        {
+            agent.SetDestination(player.position);
+        }
+        else
+        {
+            isChasing = false;
+            agent.SetDestination(transform.position); 
+        }
 
-    // Verificar la velocidad del NavMeshAgent para activar la animación de caminar
-    if (agent.velocity.sqrMagnitude > 0f)
-    {
-        SetWalkingAnimation(true); // Activar animación de caminar si está en movimiento
+        if (agent.velocity.sqrMagnitude > 0f)
+        {
+            SetWalkingAnimation(true); 
+        }
+        else
+        {
+            SetWalkingAnimation(false); 
+        }
     }
-    else
-    {
-        SetWalkingAnimation(false); // Activar animación de idle si no está en movimiento
-    }
-}
-
 
     void SetWalkingAnimation(bool isWalking)
     {
-        animator.SetBool("walkParam", isWalking); // Actualizar el parámetro del Animator
+        animator.SetBool("walkParam", isWalking); 
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            
-            animator.SetBool("punchParam", true); // Activar animación de punch
-            animator.SetBool("walkParam", false); // Desactivar animación de caminar
-            agent.isStopped = true; // Detener el movimiento del NavMeshAgent
+            animator.SetBool("punchParam", true); 
+            animator.SetBool("walkParam", false); 
+            agent.isStopped = true; 
         }
     }
 
@@ -75,18 +73,22 @@ public class GuardEnemy : MonoBehaviour
         if (other.tag == "Player")
         {
             Debug.Log("Chasing player!");
-            animator.SetBool("punchParam", false); // Desactivar animación de punch
-            agent.isStopped = false; // Reanudar el movimiento del NavMeshAgent
-            SetWalkingAnimation(isChasing); // Reanudar animación de caminar si está persiguiendo
+            animator.SetBool("punchParam", false);
+            agent.isStopped = false; 
+            SetWalkingAnimation(isChasing); 
         }
     }
 
-    // Función para manejar el final del ataque del jugador
     public void PlayerAttackEnd()
     {
         Debug.Log("Player attack animation ended!");
-        animator.SetBool("punchParam", false); // Asegurarse de desactivar el parámetro de punch
-        agent.isStopped = false; // Detener el movimiento del NavMeshAgent
-        SetWalkingAnimation(false); // Asegurarse de que la animación de caminar se detenga
+        animator.SetBool("punchParam", false); 
+        agent.isStopped = false; 
+        SetWalkingAnimation(false); 
+
+        if (canvasController != null)
+        {
+            canvasController.DecreaseOxygenTime(oxygenReductionTime); // Usar la variable configurada en el editor
+        }
     }
 }

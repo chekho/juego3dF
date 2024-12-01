@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float normalSpeed = 5f;
     public float sprintSpeed = 15f;
     public float turnSpeed = 5f;
+    public CanvasController canvasController; 
 
     private bool isWalking = false;
     private bool picking = false;
@@ -20,33 +21,26 @@ public class PlayerMovement : MonoBehaviour
     public List<string> itemsCollected = null;
     public List<string> itemsToCollect = null;
 
+    private bool canMove = true; // Nueva variable para controlar el movimiento
+
     void Start()
     {
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = normalSpeed; // Establecer la velocidad inicial
+        agent.speed = normalSpeed; 
         ResetAnimationStates();
     }
 
     void Update()
     {
-        if (itemsCollected.Contains("Lever"))
-        {
-            var lev = gameObject.transform.Find("mario_right_hand_open.001");
-            lev.gameObject.SetActive(true);
-            haveLever = true;
-        }
-        else
-        {
-            var lev = gameObject.transform.Find("mario_right_hand_open.001");
-            lev.gameObject.SetActive(false);
-            haveLever = false;
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        agent.speed = isSprinting ? sprintSpeed : normalSpeed;
 
+        if (isSprinting && canvasController != null)
+        {
+            canvasController.DecreaseOxygenTime(3 * Time.deltaTime);
         }
-        // Detectar si la tecla Shift está presionada
-        agent.speed = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) ? sprintSpeed : normalSpeed;
 
-        // Movimiento con teclado
         Vector3 move = Vector3.zero;
         if (Input.GetKey(KeyCode.UpArrow))
         {
@@ -79,8 +73,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Movimiento con el ratón
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && canMove) // Verificar si el movimiento está permitido
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -88,26 +81,13 @@ public class PlayerMovement : MonoBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
                     agent.SetDestination(hit.point);
-                    if (haveLever)
-                    {
-                        attackLever = true;
-                        attackLevernt = false;
-                    }
-                    else
-                    {
-                        attackLever = false;
-                        attackLevernt = true;
-                    }
                 }
             }
             isWalking = agent.velocity.magnitude > 0.1f;
         }
 
-        // Actualizar animaciones
         ChooseAnimation();
     }
-
-
 
     void ChooseAnimation()
     {
@@ -138,5 +118,37 @@ public class PlayerMovement : MonoBehaviour
     public void CollectItem(string itemName)
     {
         itemsCollected.Add(itemName);
+    }
+
+    public void StartAttackLever()
+    {
+        if (haveLever)
+        {
+            attackLever = true;
+            canMove = false; // Desactivar el movimiento temporalmente
+            Invoke("EnableMovement", 0.5f); // Volver a activar el movimiento después de 0.5 segundos
+        }
+    }
+
+    public void StartAttackNoLever()
+    {
+        if (!haveLever)
+        {
+            attackLevernt = true;
+            canMove = false; // Desactivar el movimiento temporalmente
+            Invoke("EnableMovement", 0.5f); // Volver a activar el movimiento después de 0.5 segundos
+        }
+    }
+
+    void EnableMovement()
+    {
+        canMove = true;
+    }
+
+    public void LookAtTarget(Vector3 targetPosition)
+    {
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 }
