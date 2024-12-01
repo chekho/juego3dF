@@ -7,24 +7,41 @@ public class EnemyRetreat : MonoBehaviour
     public float detectionDistance = 2f; // Distancia de detección del jugador
     public LayerMask enemyLayer; // Capa de enemigos
     public float knockbackSpeed = 5f; // Velocidad del knockback
+    public int damageAmount = 10; // Cantidad de daño al golpear
 
     public Transform player;
     private NavMeshAgent navMeshAgent;
+    private PlayerMovement playerMovement; // Referencia al PlayerMovement del jugador
+    private EnemyHealth enemyHealth; // Referencia al EnemyHealth del enemigo
 
     private bool isKnockedBack = false;
 
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        enemyHealth = GetComponent<EnemyHealth>();
 
         if (player == null)
         {
             Debug.LogError("Player not found. Make sure the player has the tag 'Player'.");
         }
+        else
+        {
+            playerMovement = player.GetComponent<PlayerMovement>(); // Obtener el PlayerMovement del jugador
+            if (playerMovement == null)
+            {
+                Debug.LogError("PlayerMovement script not found on the player.");
+            }
+        }
 
         if (navMeshAgent == null)
         {
             Debug.LogError("NavMeshAgent not found on the enemy.");
+        }
+
+        if (enemyHealth == null)
+        {
+            Debug.LogError("EnemyHealth script not found on the enemy.");
         }
     }
 
@@ -45,14 +62,22 @@ public class EnemyRetreat : MonoBehaviour
             {
                 if (hit.transform == transform)
                 {
-                    ApplyKnockback();
+                    bool knockbackApplied = ApplyKnockback();
+                    if (knockbackApplied)
+                    {
+                        PlayPlayerAttackAnimation(); // Reproducir la animación de golpe del jugador
+                        playerMovement.LookAtTarget(transform.position); // Hacer que el jugador mire al enemigo
+                        enemyHealth.TakeDamage(damageAmount); // Reducir la vida del enemigo
+                    }
                 }
             }
         }
     }
 
-    void ApplyKnockback()
+    bool ApplyKnockback()
     {
+        if (isKnockedBack) return false;
+
         isKnockedBack = true;
 
         // Pausar el NavMeshAgent
@@ -64,6 +89,7 @@ public class EnemyRetreat : MonoBehaviour
 
         // Iniciar knockback interpolado
         StartCoroutine(PerformKnockback(targetPosition));
+        return true;
     }
 
     System.Collections.IEnumerator PerformKnockback(Vector3 targetPosition)
@@ -88,5 +114,21 @@ public class EnemyRetreat : MonoBehaviour
         // Reactivar el NavMeshAgent
         navMeshAgent.enabled = true;
         isKnockedBack = false;
+    }
+
+    void PlayPlayerAttackAnimation()
+    {
+        // Reproducir la animación de golpe del jugador
+        if (playerMovement != null)
+        {
+            if (playerMovement.haveLever)
+            {
+                playerMovement.StartAttackLever();
+            }
+            else
+            {
+                playerMovement.StartAttackNoLever();
+            }
+        }
     }
 }
