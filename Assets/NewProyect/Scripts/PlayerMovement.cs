@@ -30,6 +30,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (itemsCollected.Contains("Lever"))
+        {
+            var lev = gameObject.transform.Find("mario_right_hand_open.001");
+            lev.gameObject.SetActive(true);
+            haveLever = true;
+        }
+        else
+        {
+            var lev = gameObject.transform.Find("mario_right_hand_open.001");
+            lev.gameObject.SetActive(false);
+            haveLever = false;
+
+        }
         // Detectar si la tecla Shift está presionada
         agent.speed = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) ? sprintSpeed : normalSpeed;
 
