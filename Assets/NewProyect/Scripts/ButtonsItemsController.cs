@@ -35,12 +35,10 @@ public class ButtonsItemsController : MonoBehaviour
         if (!pm.itemsCollected.Contains(requiredItem))
         {
             StartCoroutine(EsperarYHacerAlgo());
-            Debug.LogWarning($"El jugador no tiene el ítem requerido: {requiredItem}");
             return;
         }
 
         menu.SetActive(!menu.activeInHierarchy);
-        Debug.Log($"Mostrando menú: {menu.name}");
     }
 
     private void HideAllMenus()
