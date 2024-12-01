@@ -9,7 +9,9 @@ public class PlayerMovement : MonoBehaviour
     public float normalSpeed = 5f;
     public float sprintSpeed = 15f;
     public float turnSpeed = 5f;
-    public CanvasController canvasController; 
+    public CanvasController canvasController;
+    public GameObject Lever;
+    public int health = 100;
 
     private bool isWalking = false;
     private bool picking = false;
@@ -86,6 +88,11 @@ public class PlayerMovement : MonoBehaviour
             isWalking = agent.velocity.magnitude > 0.1f;
         }
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("space"); 
+        }
+
         ChooseAnimation();
     }
 
@@ -117,6 +124,21 @@ public class PlayerMovement : MonoBehaviour
 
     public void CollectItem(string itemName)
     {
+        if (itemName == "Lever")
+        {
+            Lever.SetActive(true);
+            haveLever = true;
+        }
+        else if (itemName == "O2")
+        {
+            canvasController.IncreaseOxygenTime(30);
+            Invoke(nameof(RemoveO2), 30);
+        }
+        else if (itemName == "O2ito")
+        {
+            canvasController.IncreaseOxygenTime(10);
+            Invoke(nameof(RemoveO2ito), 10);
+        }
         itemsCollected.Add(itemName);
     }
 
@@ -150,5 +172,16 @@ public class PlayerMovement : MonoBehaviour
         Vector3 direction = (targetPosition - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+    }
+
+
+    void RemoveO2()
+    {
+        itemsCollected.Remove("O2");
+    }
+
+    void RemoveO2ito ()
+    {
+        itemsCollected.Remove("O2ito");
     }
 }

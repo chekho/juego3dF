@@ -14,7 +14,8 @@ public class CanvasController : MonoBehaviour
     public GameObject ImagesPanel;
     public List<Image> imagesMenu;
     public TextMeshProUGUI oxygenText; 
-    public TextMeshProUGUI scoreText; 
+    public TextMeshProUGUI scoreText;  
+    public TextMeshProUGUI alertMenu; 
 
     private RectTransform rtOxigenLevel;
     private float sizeOxigenLevel;
@@ -89,7 +90,7 @@ public class CanvasController : MonoBehaviour
 
     public void ShowFurnitureMenu()
     {
-        FurnitureMenu.SetActive(!FurnitureMenu.active);
+        FurnitureMenu.SetActive(!FurnitureMenu.activeInHierarchy);
     }
 
     public void DecreaseOxygenTime(float seconds)
@@ -97,8 +98,28 @@ public class CanvasController : MonoBehaviour
         remainingOxygenTime = Mathf.Max(0, remainingOxygenTime - seconds);
     }
 
+
+    public void IncreaseOxygenTime(float seconds)
+    {
+        remainingOxygenTime = Mathf.Max(0, remainingOxygenTime + (seconds));
+    }
+
     public void IncreaseScore(int points)
     {
         score += points;
+    }
+
+    public void ShowAlertItemCollectedWithChangeInText(string Message)
+    {
+        alertMenu.text = Message;
+        StartCoroutine(ShowAlert());
+        return;
+    }
+
+    private IEnumerator ShowAlert()
+    {
+        alertMenu.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3f); 
+        alertMenu.gameObject.SetActive(false);
     }
 }

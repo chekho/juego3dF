@@ -9,7 +9,7 @@ using UnityEditor;
 public class ButtonsItemsController : MonoBehaviour
 {
     public GameObject menu;
-    public GameObject alertMenu; // Referencia al AlertMenu
+    public TextMeshProUGUI alertMenu; // Referencia al AlertMenu
     public string requiredItem; // Ítem necesario para este menú
     private CanvasController canvas;
     private PlayerMovement pm;
@@ -21,7 +21,7 @@ public class ButtonsItemsController : MonoBehaviour
 
         // Esconde todos los menús y el mensaje de alerta al inicio
         menu.SetActive(false);
-        alertMenu.SetActive(false);
+        alertMenu.gameObject.SetActive(false);
     }
 
     public void ShowMenu()
@@ -29,17 +29,19 @@ public class ButtonsItemsController : MonoBehaviour
         // Si el ítem está disponible, mostrar el menú
         HideAllMenus();
         // Ocultar el mensaje de alerta si estaba activo
-        alertMenu.SetActive(false);
+        alertMenu.gameObject.SetActive(false);
 
         // Validar si el jugador tiene el ítem requerido
         if (!pm.itemsCollected.Contains(requiredItem))
         {
+            alertMenu.text = "No tienes ese objeto";
             StartCoroutine(EsperarYHacerAlgo());
             return;
         }
 
         menu.SetActive(!menu.activeInHierarchy);
     }
+
 
     private void HideAllMenus()
     {
@@ -55,9 +57,9 @@ public class ButtonsItemsController : MonoBehaviour
 
     private IEnumerator EsperarYHacerAlgo()
     {
-        alertMenu.SetActive(true);
+        alertMenu.gameObject.SetActive(true);
         yield return new WaitForSeconds(3f); // Espera 3 segundos Debug.Log("¡3 segundos han pasado!");
-        alertMenu.SetActive(false);
+        alertMenu.gameObject.SetActive(false);
     }
 
 
