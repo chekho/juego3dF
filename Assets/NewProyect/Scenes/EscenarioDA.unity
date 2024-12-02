@@ -444,6 +444,7 @@ MonoBehaviour:
   chaseRadius: 50
   canvasController: {fileID: 2048196812}
   oxygenReductionTime: 60
+  audioSource: {fileID: 0}
 --- !u!95 &14637715
 Animator:
   serializedVersion: 5
@@ -21212,7 +21213,7 @@ AudioSource:
   m_PlayOnAwake: 1
   m_Volume: 0.419
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
