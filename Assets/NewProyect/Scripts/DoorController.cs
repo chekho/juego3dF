@@ -6,6 +6,7 @@ public class DoorController : MonoBehaviour
 {
     public NavMeshSurface navMeshSurface; // Referencia al NavMeshSurface
     public Animator doorAnimator; // Referencia al Animator
+    public bool isOpen = false;
 
     void Start()
     {
@@ -17,6 +18,7 @@ public class DoorController : MonoBehaviour
     {
         Debug.Log("RemoveDoor called.");
         gameObject.SetActive(false);
+        isOpen = true;
 
         if (navMeshSurface != null)
         {
