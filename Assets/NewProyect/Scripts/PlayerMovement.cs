@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public CanvasController canvasController;
     public GameObject Lever;
     public int health = 100;
+    private AudioSource[] audioSources;
 
     private bool isWalking = false;
     private bool picking = false;
@@ -31,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.speed = normalSpeed; 
         ResetAnimationStates();
+        audioSources = GetComponents<AudioSource>();
     }
 
     void Update()
@@ -139,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
             canvasController.IncreaseOxygenTime(10);
             Invoke(nameof(RemoveO2ito), 10);
         }
+        ReproducirSonido(0);
         itemsCollected.Add(itemName);
     }
 
@@ -149,6 +152,7 @@ public class PlayerMovement : MonoBehaviour
             attackLever = true;
             canMove = false; // Desactivar el movimiento temporalmente
             Invoke("EnableMovement", 0.5f); // Volver a activar el movimiento después de 0.5 segundos
+            ReproducirSonido(2);
         }
     }
 
@@ -159,6 +163,7 @@ public class PlayerMovement : MonoBehaviour
             attackLevernt = true;
             canMove = false; // Desactivar el movimiento temporalmente
             Invoke("EnableMovement", 0.5f); // Volver a activar el movimiento después de 0.5 segundos
+            ReproducirSonido(1);
         }
     }
 
@@ -183,5 +188,17 @@ public class PlayerMovement : MonoBehaviour
     void RemoveO2ito ()
     {
         itemsCollected.Remove("O2ito");
+    }
+
+    public void ReproducirSonido(int indice)
+    {
+        if (indice >= 0 && indice < audioSources.Length)
+        {
+            audioSources[indice].Play();
+        }
+        else
+        {
+            Debug.LogError("Índice fuera de rango. Asegúrate de que el índice esté entre 0 y " + (audioSources.Length - 1));
+        }
     }
 }
