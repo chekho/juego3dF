@@ -18,7 +18,7 @@ public class NumpadController : MonoBehaviour
     void Start()
     {
         numpadCanvas.SetActive(false); // Desactiva el canvas al inicio
-        if(ic.name == "Paper" ||  ic.name == "Poster" || ic.name == "Sheet")
+        if (ic.name == "Paper" || ic.name == "Poster" || ic.name == "Sheet")
         {
         }
     }
@@ -30,23 +30,33 @@ public class NumpadController : MonoBehaviour
             if (ic.name == "Paper" || ic.name == "Poster" || ic.name == "Sheet")
             {
                 correctPassword = ic.password;
+                foreach (char key in Input.inputString)
+                {
+                    if (char.IsDigit(key))
+                    {
+                        AddDigit(key.ToString());
+                    }
+                    else if (key == '\b') // Backspace
+                    {
+                        RemoveLastDigit();
+                    }
+                    else if (key == '\r' || key == '\n') // Enter
+                    {
+                        EnterPassword();
+                    }
+                }
+            } else if(ic.name == "Key" || ic.name == "Id")
+            {
+                correctPassword = ic.name;
+                if (Input.GetKey(KeyCode.KeypadEnter))
+                {
+                    if(playerMovement.itemsCollected.Contains(ic.name))
+                    {
+                        doorController.RemoveDoor();
+                    }
+                }
             }
 
-            foreach (char key in Input.inputString)
-            {
-                if (char.IsDigit(key))
-                {
-                    AddDigit(key.ToString());
-                }
-                else if (key == '\b') // Backspace
-                {
-                    RemoveLastDigit();
-                }
-                else if (key == '\r' || key == '\n') // Enter
-                {
-                    EnterPassword();
-                }
-            }
         }
     }
 
@@ -97,7 +107,10 @@ public class NumpadController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (skipCanvasIfItemCollected && playerMovement.itemsCollected.Contains("ItemID")) // Cambia "ItemID" por el ID del item específico
+            if (doorController.isOpen)
+            {
+                numpadCanvas.SetActive(false);
+            } else if (skipCanvasIfItemCollected && playerMovement.itemsCollected.Contains("ItemID")) // Cambia "ItemID" por el ID del item específico
             {
                 Debug.Log("Item ya recolectado, abriendo puerta directamente.");
                 doorController.RemoveDoor();
