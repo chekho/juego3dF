@@ -66,6 +66,10 @@ public class CanvasController : MonoBehaviour
 
         if (remainingOxygenTime <= 0)
         {
+            // guardar escena antes de morir para reintentar
+            PlayerPrefs.SetString("PreviousScene", SceneManager.GetActiveScene().name);
+            PlayerPrefs.Save();
+
             SceneManager.LoadScene("GameOver");
         }
 

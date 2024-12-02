@@ -8,7 +8,7 @@ public class GuardEnemy : MonoBehaviour
     public float chaseRadius = 15f;
     public CanvasController canvasController;
     public float oxygenReductionTime = 60f; // Variable pública para configurar el tiempo de reducción de oxígeno desde el editor
-
+    public AudioSource audioSource;
     private NavMeshAgent agent;
     private Animator animator;
     private bool isChasing = false;
@@ -16,7 +16,9 @@ public class GuardEnemy : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        animator = GetComponent<Animator>(); 
+        animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.loop = true;
     }
 
     void Update()
@@ -31,40 +33,43 @@ public class GuardEnemy : MonoBehaviour
         if (distanceToPlayer < detectionRadius)
         {
             isChasing = true;
+
         }
 
         if (isChasing && distanceToPlayer < chaseRadius)
         {
             agent.SetDestination(player.position);
+
         }
         else
         {
             isChasing = false;
-            agent.SetDestination(transform.position); 
+            agent.SetDestination(transform.position);
+            audioSource.Play();
         }
 
         if (agent.velocity.sqrMagnitude > 0f)
         {
-            SetWalkingAnimation(true); 
+            SetWalkingAnimation(true);
         }
         else
         {
-            SetWalkingAnimation(false); 
+            SetWalkingAnimation(false);
         }
     }
 
     void SetWalkingAnimation(bool isWalking)
     {
-        animator.SetBool("walkParam", isWalking); 
+        animator.SetBool("walkParam", isWalking);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            animator.SetBool("punchParam", true); 
-            animator.SetBool("walkParam", false); 
-            agent.isStopped = true; 
+            animator.SetBool("punchParam", true);
+            animator.SetBool("walkParam", false);
+            agent.isStopped = true;
         }
     }
 
@@ -74,17 +79,18 @@ public class GuardEnemy : MonoBehaviour
         {
             Debug.Log("Chasing player!");
             animator.SetBool("punchParam", false);
-            agent.isStopped = false; 
-            SetWalkingAnimation(isChasing); 
+            agent.isStopped = false;
+            audioSource.Play();
+            SetWalkingAnimation(isChasing);
         }
     }
 
     public void PlayerAttackEnd()
     {
         Debug.Log("Player attack animation ended!");
-        animator.SetBool("punchParam", false); 
-        agent.isStopped = false; 
-        SetWalkingAnimation(false); 
+        animator.SetBool("punchParam", false);
+        agent.isStopped = false;
+        SetWalkingAnimation(false);
 
         if (canvasController != null)
         {
