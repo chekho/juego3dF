@@ -3,6 +3,13 @@ using UnityEngine.AI;
 
 public class PauseArea : MonoBehaviour
 {
+    private CanvasController canvasController;
+
+    void Start()
+    {
+        canvasController = FindObjectOfType<CanvasController>();
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -41,7 +48,12 @@ public class PauseArea : MonoBehaviour
             }
         }
 
-        // Pausar otros elementos del juego si es necesario
+        // Pausar el gasto de oxígeno y la actualización de puntaje
+        if (canvasController != null)
+        {
+            canvasController.PauseOxygen();
+            canvasController.PauseScore();
+        }
     }
 
     void ResumeGame()
@@ -66,6 +78,11 @@ public class PauseArea : MonoBehaviour
             }
         }
 
-        // Reanudar otros elementos del juego si es necesario
+        // Reanudar el gasto de oxígeno y la actualización de puntaje
+        if (canvasController != null)
+        {
+            canvasController.ResumeOxygen();
+            canvasController.ResumeScore();
+        }
     }
 }

@@ -24,6 +24,8 @@ public class CanvasController : MonoBehaviour
     private int score = 0;
     private float scoreUpdateTime = 1f;
     private float scoreUpdateTimer = 0f;
+    private bool isOxygenPaused = false; 
+    private bool isScorePaused = false; 
 
     private void Start()
     {
@@ -42,7 +44,10 @@ public class CanvasController : MonoBehaviour
 
     private void Update()
     {
-        remainingOxygenTime -= Time.deltaTime;
+        if (!isOxygenPaused)
+        {
+            remainingOxygenTime -= Time.deltaTime;
+        }
 
         float newWidth = Mathf.Max(0, sizeOxigenLevel * (remainingOxygenTime / totalOxygenTime));
         rtOxigenLevel.sizeDelta = new Vector2(newWidth, rtOxigenLevel.sizeDelta.y);
@@ -52,11 +57,14 @@ public class CanvasController : MonoBehaviour
             oxygenText.text = "Oxígeno: " + Mathf.CeilToInt(remainingOxygenTime / 60f) + " mins";
         }
 
-        scoreUpdateTimer += Time.deltaTime;
-        if (scoreUpdateTimer >= scoreUpdateTime)
+        if (!isScorePaused)
         {
-            IncreaseScore(5);
-            scoreUpdateTimer = 0f;
+            scoreUpdateTimer += Time.deltaTime;
+            if (scoreUpdateTimer >= scoreUpdateTime)
+            {
+                IncreaseScore(5);
+                scoreUpdateTimer = 0f;
+            }
         }
 
         if (scoreText != null)
@@ -73,7 +81,6 @@ public class CanvasController : MonoBehaviour
         List<string> ItemsCurrent = pm.itemsCollected;
         foreach (var item in ListItems)
         {
-            //obtener imagen
             var imageObject = ImagesPanel.transform.Find(item);
             if (imageObject != null)
             {
@@ -98,7 +105,6 @@ public class CanvasController : MonoBehaviour
         remainingOxygenTime = Mathf.Max(0, remainingOxygenTime - seconds);
     }
 
-
     public void IncreaseOxygenTime(float seconds)
     {
         remainingOxygenTime = Mathf.Max(0, remainingOxygenTime + (seconds));
@@ -121,5 +127,26 @@ public class CanvasController : MonoBehaviour
         alertMenu.gameObject.SetActive(true);
         yield return new WaitForSeconds(3f); 
         alertMenu.gameObject.SetActive(false);
+    }
+
+    // Métodos para pausar y reanudar el gasto de oxígeno y la actualización de puntaje
+    public void PauseOxygen()
+    {
+        isOxygenPaused = true;
+    }
+
+    public void ResumeOxygen()
+    {
+        isOxygenPaused = false;
+    }
+
+    public void PauseScore()
+    {
+        isScorePaused = true;
+    }
+
+    public void ResumeScore()
+    {
+        isScorePaused = false;
     }
 }
