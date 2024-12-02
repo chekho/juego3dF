@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -199,6 +200,19 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             Debug.LogError("Índice fuera de rango. Asegúrate de que el índice esté entre 0 y " + (audioSources.Length - 1));
+        }
+    }
+
+
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        
+        if (collision.gameObject.CompareTag("Finish"))
+        {
+            
+           SceneManager.LoadScene("Winner");
+            
         }
     }
 }
