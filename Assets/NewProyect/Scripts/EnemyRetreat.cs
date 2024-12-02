@@ -124,10 +124,12 @@ public class EnemyRetreat : MonoBehaviour
             if (playerMovement.haveLever)
             {
                 playerMovement.StartAttackLever();
+                damageAmount = 10;
             }
             else
             {
                 playerMovement.StartAttackNoLever();
+                damageAmount = 5;
             }
         }
     }

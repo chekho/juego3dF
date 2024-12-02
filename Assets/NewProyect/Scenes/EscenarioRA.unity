@@ -264,6 +264,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a642df64c8380ae44954a424764d065d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1827450167}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: a642df64c8380ae44954a424764d065d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1177177994}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a642df64c8380ae44954a424764d065d, type: 3}
 --- !u!4 &3562563 stripped
@@ -10760,12 +10763,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1177177993}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.083428174, z: -0, w: 0.9965138}
-  m_LocalPosition: {x: -255.5, y: 0.95, z: -86.73}
-  m_LocalScale: {x: 7.3394423, y: 0.49619, z: 14.322029}
+  m_LocalRotation: {x: -0, y: -0.70256126, z: -0, w: 0.7116233}
+  m_LocalPosition: {x: 0.023310335, y: -1.1285115, z: -0.2514584}
+  m_LocalScale: {x: 1.6368861, y: 0.11066327, z: 3.1941836}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1472612332}
+  m_Father: {fileID: 3562563}
   m_LocalEulerAnglesHint: {x: 0, y: 9.571, z: 0}
 --- !u!65 &1177177995
 BoxCollider:
@@ -15077,7 +15080,6 @@ Transform:
   - {fileID: 1679154516}
   - {fileID: 1783003629}
   - {fileID: 1559880272}
-  - {fileID: 1177177994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1477237505 stripped
@@ -18108,6 +18110,18 @@ PrefabInstance:
     - target: {fileID: 498868, guid: f18932879bb23b84ca5370b65419ee41, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 20538312, guid: f18932879bb23b84ca5370b65419ee41, type: 3}
+      propertyPath: m_LODs.Array.data[0].renderers.Array.data[0].renderer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 20539538, guid: f18932879bb23b84ca5370b65419ee41, type: 3}
+      propertyPath: m_LODs.Array.data[0].renderers.Array.data[0].renderer
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 20552026, guid: f18932879bb23b84ca5370b65419ee41, type: 3}
+      propertyPath: m_LODs.Array.data[0].renderers.Array.data[0].renderer
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
