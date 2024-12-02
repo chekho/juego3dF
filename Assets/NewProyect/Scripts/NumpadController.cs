@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEditor.VersionControl;
 
 public class NumpadController : MonoBehaviour
 {
@@ -12,16 +13,25 @@ public class NumpadController : MonoBehaviour
     public DoorController doorController; // Referencia al DoorController
     public PlayerMovement playerMovement; // Referencia al PlayerMovement para checar items recolectados
     public bool skipCanvasIfItemCollected = false; // Nueva variable para controlar el comportamiento
+    public ItemController ic;
 
     void Start()
     {
         numpadCanvas.SetActive(false); // Desactiva el canvas al inicio
+        if(ic.name == "Paper" ||  ic.name == "Poster" || ic.name == "Sheet")
+        {
+        }
     }
 
     void Update()
     {
         if (numpadCanvas.activeInHierarchy)
         {
+            if (ic.name == "Paper" || ic.name == "Poster" || ic.name == "Sheet")
+            {
+                correctPassword = ic.password;
+            }
+
             foreach (char key in Input.inputString)
             {
                 if (char.IsDigit(key))
