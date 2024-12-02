@@ -210,9 +210,7 @@ public class PlayerMovement : MonoBehaviour
         
         if (collision.gameObject.CompareTag("Finish"))
         {
-            
            SceneManager.LoadScene("Winner");
-            
         }
     }
 }
