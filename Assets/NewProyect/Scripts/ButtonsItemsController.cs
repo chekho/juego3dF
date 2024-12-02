@@ -3,29 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using UnityEditor;
 
 public class ButtonsItemsController : MonoBehaviour
 {
     public GameObject menu;
+    public TextMeshProUGUI alertMenu; // Referencia al AlertMenu
+    public string requiredItem; // Ítem necesario para este menú
     private CanvasController canvas;
-    private List<Image> images;
-    private List<Image> buttons;
+    private PlayerMovement pm;
 
     private void Start()
     {
         canvas = FindObjectOfType<CanvasController>();
-        buttons = canvas.transform.GetComponentsInChildren<Image>().Where(i => i.gameObject.activeInHierarchy).ToList();
-        //images = canvas.GetComponentsInChildren<Image>().Where(i=>i.name.EndsWith("Menu")).ToList();
-        images = canvas.imagesMenu;
-        images.ForEach(img => {
-            img.gameObject.SetActive(false);
-        });
+        pm = FindObjectOfType<PlayerMovement>();
+
+        // Esconde todos los menús y el mensaje de alerta al inicio
+        menu.SetActive(false);
+        alertMenu.gameObject.SetActive(false);
     }
 
     public void ShowMenu()
     {
-        // Oculta todos los menús antes de mostrar el nuevo
+        // Si el ítem está disponible, mostrar el menú
         HideAllMenus();
+        // Ocultar el mensaje de alerta si estaba activo
+        alertMenu.gameObject.SetActive(false);
+
+        // Validar si el jugador tiene el ítem requerido
+        if (!pm.itemsCollected.Contains(requiredItem))
+        {
+            alertMenu.text = "No tienes ese objeto";
+            StartCoroutine(EsperarYHacerAlgo());
+            return;
+        }
+
         menu.SetActive(!menu.activeInHierarchy);
     }
 
@@ -35,7 +48,19 @@ public class ButtonsItemsController : MonoBehaviour
         var allMenus = FindObjectsOfType<ButtonsItemsController>();
         foreach (var menuController in allMenus)
         {
-            menuController.menu.SetActive(false);
+            if (menuController != this) // Excluir el menú actual
+            {
+                menuController.menu.SetActive(false);
+            }
         }
     }
+
+    private IEnumerator EsperarYHacerAlgo()
+    {
+        alertMenu.gameObject.SetActive(true);
+        yield return new WaitForSeconds(3f); // Espera 3 segundos Debug.Log("¡3 segundos han pasado!");
+        alertMenu.gameObject.SetActive(false);
+    }
+
+
 }

@@ -6,20 +6,21 @@ public class ItemController : MonoBehaviour
 {
     public string name; 
     private PlayerMovement pm;
+    private CanvasController cc;
 
     void Start()
     {
         pm = FindObjectOfType<PlayerMovement>();
+        cc = FindObjectOfType<CanvasController>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Colisión de " + other.tag + " con " + name);
         if (other.CompareTag("Player"))
         {
             pm.CollectItem(name);
-            //destruir objeto
             gameObject.SetActive(false);
+            cc.ShowAlertItemCollectedWithChangeInText((name + " recolectado"));
         }
     }
 

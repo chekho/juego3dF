@@ -9,6 +9,9 @@ public class PlayerMovement : MonoBehaviour
     public float normalSpeed = 5f;
     public float sprintSpeed = 15f;
     public float turnSpeed = 5f;
+    public CanvasController canvasController;
+    public GameObject Lever;
+    public int health = 100;
 
     private bool isWalking = false;
     private bool picking = false;
@@ -20,20 +23,26 @@ public class PlayerMovement : MonoBehaviour
     public List<string> itemsCollected = null;
     public List<string> itemsToCollect = null;
 
+    private bool canMove = true; // Nueva variable para controlar el movimiento
+
     void Start()
     {
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = normalSpeed; // Establecer la velocidad inicial
+        agent.speed = normalSpeed; 
         ResetAnimationStates();
     }
 
     void Update()
     {
-        // Detectar si la tecla Shift está presionada
-        agent.speed = (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) ? sprintSpeed : normalSpeed;
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+        agent.speed = isSprinting ? sprintSpeed : normalSpeed;
 
-        // Movimiento con teclado
+        if (isSprinting && canvasController != null)
+        {
+            canvasController.DecreaseOxygenTime(3 * Time.deltaTime);
+        }
+
         Vector3 move = Vector3.zero;
         if (Input.GetKey(KeyCode.UpArrow))
         {
@@ -66,8 +75,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            // Movimiento con el ratón
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && canMove) // Verificar si el movimiento está permitido
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
@@ -75,26 +83,18 @@ public class PlayerMovement : MonoBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
                     agent.SetDestination(hit.point);
-                    if (haveLever)
-                    {
-                        attackLever = true;
-                        attackLevernt = false;
-                    }
-                    else
-                    {
-                        attackLever = false;
-                        attackLevernt = true;
-                    }
                 }
             }
             isWalking = agent.velocity.magnitude > 0.1f;
         }
 
-        // Actualizar animaciones
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("space"); 
+        }
+
         ChooseAnimation();
     }
-
-
 
     void ChooseAnimation()
     {
@@ -124,6 +124,64 @@ public class PlayerMovement : MonoBehaviour
 
     public void CollectItem(string itemName)
     {
+        if (itemName == "Lever")
+        {
+            Lever.SetActive(true);
+            haveLever = true;
+        }
+        else if (itemName == "O2")
+        {
+            canvasController.IncreaseOxygenTime(30);
+            Invoke(nameof(RemoveO2), 30);
+        }
+        else if (itemName == "O2ito")
+        {
+            canvasController.IncreaseOxygenTime(10);
+            Invoke(nameof(RemoveO2ito), 10);
+        }
         itemsCollected.Add(itemName);
+    }
+
+    public void StartAttackLever()
+    {
+        if (haveLever)
+        {
+            attackLever = true;
+            canMove = false; // Desactivar el movimiento temporalmente
+            Invoke("EnableMovement", 0.5f); // Volver a activar el movimiento después de 0.5 segundos
+        }
+    }
+
+    public void StartAttackNoLever()
+    {
+        if (!haveLever)
+        {
+            attackLevernt = true;
+            canMove = false; // Desactivar el movimiento temporalmente
+            Invoke("EnableMovement", 0.5f); // Volver a activar el movimiento después de 0.5 segundos
+        }
+    }
+
+    void EnableMovement()
+    {
+        canMove = true;
+    }
+
+    public void LookAtTarget(Vector3 targetPosition)
+    {
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+    }
+
+
+    void RemoveO2()
+    {
+        itemsCollected.Remove("O2");
+    }
+
+    void RemoveO2ito ()
+    {
+        itemsCollected.Remove("O2ito");
     }
 }
