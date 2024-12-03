@@ -65,7 +65,7 @@ public class RandomEnemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-
+            audio.Play();
             animator.SetBool("punchParam", true);
             animator.SetBool("walkParam", false);
             agent.isStopped = true;
@@ -76,7 +76,6 @@ public class RandomEnemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            audio.Play();
             Debug.Log("Chasing player!");
             animator.SetBool("punchParam", false);
             agent.isStopped = false;

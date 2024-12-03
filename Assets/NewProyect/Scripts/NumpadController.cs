@@ -48,11 +48,20 @@ public class NumpadController : MonoBehaviour
             } else if(ic.name == "Key" || ic.name == "Id")
             {
                 correctPassword = ic.name;
-                if (Input.GetKey(KeyCode.KeypadEnter))
+
+                foreach (char key in Input.inputString)
                 {
-                    if(playerMovement.itemsCollected.Contains(ic.name))
+                    if (key == '\r' || key == '\n') // Enter
                     {
-                        doorController.RemoveDoor();
+                        if (playerMovement.itemsCollected.Contains(ic.name))
+                        {
+                            doorController.RemoveDoor();
+                        }
+                        else
+                        {
+                            numpadCanvas.SetActive(false);
+                            playerMovement.canvasController.ShowAlertItemCollectedWithChangeInText("No tienes ese item");
+                        }
                     }
                 }
             }

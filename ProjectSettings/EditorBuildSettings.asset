@@ -17,4 +17,31 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/NewProyect/Scenes/GameOver.unity
     guid: cea91471b34bc524c8388ed4f7aa1cb4
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/Winner 2.unity
+    guid: 5b71dddf899cb984e9f9d10bb80ccf4c
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/Winner.unity
+    guid: 6d3f49d90c6c6d94290f0048301d75c2
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/test.unity
+    guid: 67811e5d06508ea42991e71ff9bd2a6a
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/Proyecto Player Animated.unity
+    guid: 329f62abe8984f44d9894177c154617d
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/MenuPrincipal.unity
+    guid: f17b2bb80959b614e9186b43ac2c962c
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/Instrucciones.unity
+    guid: f22a77c2585e53642b2b370c1245ebb1
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/EscenarioRA.unity
+    guid: c4589718931655746ba4d487fd06d834
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/EscenarioDA.unity
+    guid: 19b689467d6e8ef4684147a270137940
+  - enabled: 1
+    path: Assets/NewProyect/Scenes/EscenarioLeyva.unity
+    guid: 09c36453e492ca3468253d5787fc7cd7
   m_configObjects: {}
