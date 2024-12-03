@@ -10,7 +10,6 @@ public class RandomEnemy : MonoBehaviour
 
     public float patrolRange = 10f; // Radio de patrulla
     public Transform centrePoint; // Punto central del área de patrulla
-    public AudioSource audio;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -65,7 +64,6 @@ public class RandomEnemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-
             animator.SetBool("punchParam", true);
             animator.SetBool("walkParam", false);
             agent.isStopped = true;
@@ -76,7 +74,6 @@ public class RandomEnemy : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            audio.Play();
             Debug.Log("Chasing player!");
             animator.SetBool("punchParam", false);
             agent.isStopped = false;
